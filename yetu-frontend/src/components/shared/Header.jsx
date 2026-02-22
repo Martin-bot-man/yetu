@@ -10,7 +10,7 @@ const Header = () => {
     <header className="flex justify-between items-center py-4 px-8 bg-[#1a1a1a]">
       {/* [Logo] */}
       <div className='flex items-center gap-2'>
-        <img src={logo}  className='h-8 w-8'alt="Yetu logo" />
+        <img src={logo}  className='h-8 w-8 rounded'alt="Yetu logo" />
         <h1 className='text-lg font-semibold text-[#f5f5f5]'>Yetu</h1>
       </div>
       {/* {/SEARCH} */}
