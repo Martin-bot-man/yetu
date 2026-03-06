@@ -43,8 +43,11 @@ const Register = ({setIsRegister}) => {
       }, 1500);
     },
     onError: (error) => {
-      const { response } = error;
-      const message = response.data.message;
+      const message =
+        error?.response?.data?.message ||
+        (error?.request
+          ? "Cannot reach server. Check backend is running on http://localhost:8000."
+          : "Signup failed. Please try again.");
       enqueueSnackbar(message, { variant: "error" });
     },
   });

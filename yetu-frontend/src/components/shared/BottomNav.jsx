@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaHome } from "react-icons/fa";
-import { MdOutlineReorder,MdTableBar} from "react-icons/md";
+import { MdOutlineReorder,MdTableBar, MdInventory } from "react-icons/md";
 import { CiCircleMore } from "react-icons/ci";
 import { BiSolidDish } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ const BottomNav = () => {
       <button onClick={()=>navigate("/")} className= 'flex items-center justify-center text-[#ababab] bg-[#343434] w-50 rounder-[20px]'><FaHome className='inline mr-2' size={20}/><p>Home</p></button>
       <button onClick={()=>navigate("/orders")} className= 'flex items-center justify-center text-[#ababab] w-50'><MdOutlineReorder className='inline mr-2'size={20}/><p>Orders</p></button>
       <button onClick={()=>navigate("/tables")} className= 'flex items-center justify-center text-[#ababab] w-50'><MdTableBar className='inline mr-2'size={20}/><p>Tables</p></button>
+      <button onClick={()=>navigate("/inventory")} className= 'flex items-center justify-center text-[#ababab] w-50'><MdInventory className='inline mr-2'size={20}/><p>Inventory</p></button>
       <button className= 'flex items-center justify-center text-[#ababab] w-50'><CiCircleMore className='inline mr-2'size={20}/><p>More</p></button>
       <button className='absolute bottom-6 bg-[#f6b100] text-[#f5f5f5] rounded-full p-3 items-center'><BiSolidDish size={30} /></button>
     </div>
