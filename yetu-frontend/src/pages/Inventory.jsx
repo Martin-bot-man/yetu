@@ -53,21 +53,21 @@ const Inventory = () => {
 
     const tabs = [
         { id: 'dashboard', name: 'Dashboard', icon: MdAnalytics },
-        { id: 'items', name: 'Inventory Items', icon: MdInventory },
+        { id: 'items', name: 'Stock Items', icon: MdInventory },
         { id: 'suppliers', name: 'Suppliers', icon: FaTruck },
-        { id: 'analytics', name: 'Analytics', icon: FaChartLine },
-        { id: 'waste', name: 'Waste Management', icon: FaRecycle }
+        { id: 'analytics', name: 'Reorder Insights', icon: FaChartLine },
+        { id: 'waste', name: 'Waste Control', icon: FaRecycle }
     ];
 
     return (
-        <div className="bg-[#1f1f1f] min-h-screen">
+        <div className="bg-[#f3f4f6] min-h-screen pb-24">
             {/* Header */}
-            <div className="bg-[#1a1a1a] border-b border-[#2a2a2a]">
+            <div className="bg-white border-b border-slate-200">
                 <div className="flex items-center justify-between px-6 py-4">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-2xl font-bold text-[#f5f5f5]">Inventory Management</h1>
-                        <span className="px-3 py-1 bg-yellow-500 text-black text-sm font-semibold rounded-full">
-                            AI-Powered
+                        <h1 className="text-2xl font-bold text-slate-900">Inventory Control</h1>
+                        <span className="px-3 py-1 bg-slate-900 text-white text-[15px] font-semibold rounded-full">
+                            Live Ops
                         </span>
                     </div>
                     <div className="flex items-center gap-3">
@@ -78,31 +78,31 @@ const Inventory = () => {
                                 dispatch(fetchReorderSuggestions());
                                 enqueueSnackbar("Data refreshed", { variant: "success" });
                             }}
-                            className="flex items-center gap-2 px-4 py-2 bg-[#2a2a2a] text-[#f5f5f5] rounded-lg hover:bg-[#3a3a3a] transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-900 rounded-lg hover:bg-slate-200 transition-colors"
                         >
-                            <MdRefresh /> Refresh
+                            <MdRefresh /> Refresh Live Data
                         </button>
                         <button 
                             onClick={() => setShowAddItem(true)}
-                            className="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white font-semibold rounded-lg hover:bg-slate-800 transition-colors"
                         >
-                            <MdAddCircle /> Add Item
+                            <MdAddCircle /> Add Stock Item
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* Navigation Tabs */}
-            <div className="border-b border-[#2a2a2a]">
+            <div className="border-b border-slate-200">
                 <div className="flex px-6 py-3 space-x-1">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[15px] font-medium transition-colors ${
                                 activeTab === tab.id 
-                                    ? 'bg-yellow-500 text-black' 
-                                    : 'text-[#ababab] hover:text-[#f5f5f5] hover:bg-[#2a2a2a]'
+                                    ? 'bg-slate-900 text-white' 
+                                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
                             }`}
                         >
                             <tab.icon size={20} />
@@ -167,7 +167,7 @@ const Inventory = () => {
                     onAdd={(data) => {
                         dispatch(addInventoryItem(data));
                         setShowAddItem(false);
-                        enqueueSnackbar("Item added successfully", { variant: "success" });
+                        enqueueSnackbar("Stock item saved.", { variant: "success" });
                     }}
                     suppliers={suppliers}
                 />
@@ -213,34 +213,34 @@ const DashboardView = ({ totalItems, totalValue, lowStockCount, wasteCost, outOf
             />
         </div>
 
-        {/* AI Insights */}
+        {/* Reorder Insights */}
         <div className="grid grid-cols-2 gap-6">
-            <div className="bg-[#1a1a1a] rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">Low Stock Alerts</h3>
+            <div className="bg-white rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Low Stock Alerts</h3>
                 {lowStockItems.length > 0 ? (
                     <div className="space-y-3">
                         {lowStockItems.slice(0, 5).map((item) => (
-                            <div key={item._id} className="flex justify-between items-center p-3 bg-[#2a2a2a] rounded">
-                                <span className="text-[#f5f5f5]">{item.name}</span>
+                            <div key={item._id} className="flex justify-between items-center p-3 bg-slate-100 rounded">
+                                <span className="text-slate-900">{item.name}</span>
                                 <span className="text-red-400 font-semibold">Stock: {item.currentStock}</span>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <p className="text-[#ababab]">No low stock items</p>
+                    <p className="text-slate-500">No low stock items</p>
                 )}
             </div>
 
-            <div className="bg-[#1a1a1a] rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">AI Reorder Suggestions</h3>
+            <div className="bg-white rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Reorder Suggestions</h3>
                 {reorderSuggestions.length > 0 ? (
                     <div className="space-y-3">
                         {reorderSuggestions.slice(0, 5).map((suggestion, index) => (
-                            <div key={index} className="p-3 bg-[#2a2a2a] rounded">
+                            <div key={index} className="p-3 bg-slate-100 rounded">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <span className="text-[#f5f5f5] font-medium">{suggestion.item.name}</span>
-                                        <p className="text-sm text-[#ababab]">{suggestion.suggestion.type}</p>
+                                        <span className="text-slate-900 font-medium">{suggestion.item.name}</span>
+                                        <p className="text-[15px] text-slate-500">{suggestion.suggestion.type}</p>
                                     </div>
                                     <span className="text-yellow-400 font-semibold">{suggestion.suggestion.quantity} units</span>
                                 </div>
@@ -248,7 +248,7 @@ const DashboardView = ({ totalItems, totalValue, lowStockCount, wasteCost, outOf
                         ))}
                     </div>
                 ) : (
-                    <p className="text-[#ababab]">No reorder suggestions available</p>
+                    <p className="text-slate-500">Stock levels look stable right now.</p>
                 )}
             </div>
         </div>
@@ -257,11 +257,11 @@ const DashboardView = ({ totalItems, totalValue, lowStockCount, wasteCost, outOf
 
 // Metric Card Component
 const MetricCard = ({ title, value, icon: Icon, color }) => (
-    <div className="bg-[#1a1a1a] rounded-lg p-6 border border-[#2a2a2a]">
+    <div className="bg-white rounded-lg p-6 border border-slate-200">
         <div className="flex items-center justify-between">
             <div>
-                <p className="text-sm text-[#ababab]">{title}</p>
-                <p className="text-2xl font-bold text-[#f5f5f5] mt-1">{value}</p>
+                <p className="text-[15px] text-slate-500">{title}</p>
+                <p className="text-2xl font-bold text-slate-900 mt-1">{value}</p>
             </div>
             <div className={`${color} p-3 rounded-full`}>
                 <Icon size={24} className="text-white" />
@@ -272,16 +272,16 @@ const MetricCard = ({ title, value, icon: Icon, color }) => (
 
 // Items View Component
 const ItemsView = ({ items, suppliers, onUpdateStock, loading }) => (
-    <div className="bg-[#1a1a1a] rounded-lg p-6">
+    <div className="bg-white rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-[#f5f5f5]">Inventory Items</h3>
-            <span className="text-sm text-[#ababab]">{items.length} items</span>
+            <h3 className="text-lg font-semibold text-slate-900">Stock Items</h3>
+            <span className="text-[15px] text-slate-500">{items.length} items</span>
         </div>
         
         <div className="overflow-x-auto">
             <table className="w-full">
                 <thead>
-                    <tr className="text-left text-[#ababab] border-b border-[#2a2a2a]">
+                    <tr className="text-left text-slate-500 border-b border-slate-200">
                         <th className="pb-3">Item</th>
                         <th className="pb-3">Category</th>
                         <th className="pb-3">Stock</th>
@@ -293,32 +293,32 @@ const ItemsView = ({ items, suppliers, onUpdateStock, loading }) => (
                 </thead>
                 <tbody>
                     {items.map((item) => (
-                        <tr key={item._id} className="border-b border-[#2a2a2a]">
+                        <tr key={item._id} className="border-b border-slate-200">
                             <td className="py-3">
                                 <div>
-                                    <p className="text-[#f5f5f5] font-medium">{item.name}</p>
-                                    <p className="text-sm text-[#ababab]">{item.unit}</p>
+                                    <p className="text-slate-900 font-medium">{item.name}</p>
+                                    <p className="text-[15px] text-slate-500">{item.unit}</p>
                                 </div>
                             </td>
                             <td className="py-3">
-                                <span className="px-2 py-1 bg-[#2a2a2a] text-xs rounded">{item.category}</span>
+                                <span className="px-2 py-1 bg-slate-100 text-sm rounded">{item.category}</span>
                             </td>
                             <td className="py-3">
                                 <div className="flex items-center gap-2">
-                                    <span className={`px-2 py-1 rounded text-sm ${
+                                    <span className={`px-2 py-1 rounded text-[15px] ${
                                         item.currentStock <= item.reorderLevel ? 'bg-red-500/20 text-red-400' :
                                         item.currentStock <= item.minStock ? 'bg-orange-500/20 text-orange-400' :
                                         'bg-green-500/20 text-green-400'
                                     }`}>
                                         {item.currentStock}
                                     </span>
-                                    <span className="text-xs text-[#ababab]">/{item.maxStock}</span>
+                                    <span className="text-sm text-slate-500">/{item.maxStock}</span>
                                 </div>
                             </td>
-                            <td className="py-3 text-[#f5f5f5]">KES {item.costPrice}</td>
-                            <td className="py-3 text-[#f5f5f5]">{item.supplier?.name || 'N/A'}</td>
+                            <td className="py-3 text-slate-900">KES {item.costPrice}</td>
+                            <td className="py-3 text-slate-900">{item.supplier?.name || 'N/A'}</td>
                             <td className="py-3">
-                                <span className={`px-2 py-1 rounded text-xs ${
+                                <span className={`px-2 py-1 rounded text-sm ${
                                     item.currentStock <= item.reorderLevel ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'
                                 }`}>
                                     {item.currentStock <= item.reorderLevel ? 'Urgent' : 'Normal'}
@@ -328,13 +328,13 @@ const ItemsView = ({ items, suppliers, onUpdateStock, loading }) => (
                                 <div className="flex gap-2">
                                     <button 
                                         onClick={() => onUpdateStock(item._id, { quantity: 1, type: 'add' })}
-                                        className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-sm hover:bg-green-500/30"
+                                        className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-[15px] hover:bg-green-500/30"
                                     >
                                         +1
                                     </button>
                                     <button 
                                         onClick={() => onUpdateStock(item._id, { quantity: 1, type: 'remove', reason: 'Preparation Waste' })}
-                                        className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-sm hover:bg-red-500/30"
+                                        className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-[15px] hover:bg-red-500/30"
                                     >
                                         -1
                                     </button>
@@ -371,8 +371,8 @@ const AddItemModal = ({ onClose, onAdd, suppliers }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-[#1a1a1a] rounded-lg p-6 w-full max-w-md">
-                <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">Add New Inventory Item</h3>
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">Add Stock Item</h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <input
@@ -380,14 +380,14 @@ const AddItemModal = ({ onClose, onAdd, suppliers }) => {
                         placeholder="Item Name"
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        className="w-full p-3 bg-[#2a2a2a] rounded-lg text-[#f5f5f5] focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full p-3 bg-slate-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500"
                         required
                     />
                     
                     <select
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        className="w-full p-3 bg-[#2a2a2a] rounded-lg text-[#f5f5f5] focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        className="w-full p-3 bg-slate-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500"
                     >
                         {['Proteins', 'Vegetables', 'Fruits', 'Grains', 'Spices', 'Dairy', 'Beverages', 'Packaging', 'Cleaning', 'Other'].map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
@@ -400,19 +400,19 @@ const AddItemModal = ({ onClose, onAdd, suppliers }) => {
                             placeholder="Current Stock"
                             value={formData.currentStock}
                             onChange={(e) => setFormData({...formData, currentStock: parseInt(e.target.value)})}
-                            className="w-full p-3 bg-[#2a2a2a] rounded-lg text-[#f5f5f5] focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            className="w-full p-3 bg-slate-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500"
                         />
                         <input
                             type="number"
                             placeholder="Cost Price (KES)"
                             value={formData.costPrice}
                             onChange={(e) => setFormData({...formData, costPrice: parseFloat(e.target.value)})}
-                            className="w-full p-3 bg-[#2a2a2a] rounded-lg text-[#f5f5f5] focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            className="w-full p-3 bg-slate-100 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-500"
                         />
                     </div>
 
                     <div className="flex gap-4">
-                        <label className="flex items-center gap-2 text-[#f5f5f5]">
+                        <label className="flex items-center gap-2 text-slate-900">
                             <input
                                 type="checkbox"
                                 checked={formData.isPerishable}
@@ -423,10 +423,10 @@ const AddItemModal = ({ onClose, onAdd, suppliers }) => {
                     </div>
 
                     <div className="flex gap-3">
-                        <button type="submit" className="flex-1 bg-yellow-500 text-black py-3 rounded-lg font-semibold hover:bg-yellow-400">
-                            Add Item
+                        <button type="submit" className="flex-1 bg-slate-900 text-white py-3 rounded-lg font-semibold hover:bg-slate-800">
+                            Save Stock Item
                         </button>
-                        <button type="button" onClick={onClose} className="flex-1 bg-[#2a2a2a] text-[#f5f5f5] py-3 rounded-lg hover:bg-[#3a3a3a]">
+                        <button type="button" onClick={onClose} className="flex-1 bg-slate-100 text-slate-900 py-3 rounded-lg hover:bg-slate-200">
                             Cancel
                         </button>
                     </div>
@@ -438,23 +438,23 @@ const AddItemModal = ({ onClose, onAdd, suppliers }) => {
 
 // Placeholder components for other tabs
 const SuppliersView = ({ suppliers, loading }) => (
-    <div className="bg-[#1a1a1a] rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">Suppliers</h3>
-        <p className="text-[#ababab]">Supplier management interface coming soon...</p>
+    <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Suppliers</h3>
+        <p className="text-slate-500">Your supplier center is next. You already have live stock and reorder data running.</p>
     </div>
 );
 
 const AnalyticsView = ({ reorderSuggestions, wasteAnalysis, items, loading }) => (
-    <div className="bg-[#1a1a1a] rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">Analytics & Insights</h3>
-        <p className="text-[#ababab]">Advanced analytics dashboard coming soon...</p>
+    <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Reorder Insights</h3>
+        <p className="text-slate-500">Use this view to prioritize what to buy next before stockouts hit service.</p>
     </div>
 );
 
 const WasteView = ({ wasteAnalysis, loading }) => (
-    <div className="bg-[#1a1a1a] rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-[#f5f5f5] mb-4">Waste Management</h3>
-        <p className="text-[#ababab]">Waste tracking and analysis coming soon...</p>
+    <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-slate-900 mb-4">Waste Control</h3>
+        <p className="text-slate-500">Track where value leaks and cut avoidable waste by shift and item.</p>
     </div>
 );
 

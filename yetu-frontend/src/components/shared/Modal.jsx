@@ -1,33 +1,28 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from "react";
+import { motion } from "framer-motion";
 
-const Modal = ({isOpen, onClose, title, children}) => {
-    if(!isOpen) return null;
+const Modal = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
 
-   return(
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <motion.div 
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="bg-[#1a1a1a] rounded-lg shadow-lg w-full max-w-lg mx-4">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-b-[#333]">
-          <h2 className="text-xl text-[#f5f5f5] font-semibold">{title}</h2>
-          <button
-            className="text-gray-500 text-2xl hover:text-gray-800"
-            onClick={onClose}
-          >
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        className="mx-4 w-full max-w-lg rounded-lg border border-slate-200 bg-white shadow-xl"
+      >
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <h2 className="text-xl font-semibold text-slate-900">{title}</h2>
+          <button className="text-2xl text-slate-500 hover:text-slate-900" onClick={onClose}>
             &times;
           </button>
         </div>
-        <div className="p-6">
-          {children}
-        </div>
+        <div className="p-6">{children}</div>
       </motion.div>
     </div>
-    
-  )
-}
+  );
+};
 
-export default Modal
+export default Modal;

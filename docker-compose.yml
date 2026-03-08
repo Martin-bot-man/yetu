@@ -27,7 +27,7 @@ services:
       MONGODB_URI: mongodb://mongo:27017/yetu-pos
       CLIENT_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
       mongo:
         condition: service_healthy

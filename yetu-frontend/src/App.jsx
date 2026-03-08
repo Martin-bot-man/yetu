@@ -5,8 +5,9 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { Home, Auth, Orders, Tables, Menu, Dashboard, Inventory } from "./pages";
+import { Home, PublicHome, PublicHomeKenya, Auth, Orders, Tables, Menu, Dashboard, Inventory } from "./pages";
 import Header from "./components/shared/Header";
+import BottomNav from "./components/shared/BottomNav";
 import { useSelector } from "react-redux";
 import useLoadData from "./hooks/useLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader"
@@ -14,24 +15,33 @@ import FullScreenLoader from "./components/shared/FullScreenLoader"
 function Layout() {
   const isLoading = useLoadData();
   const location = useLocation();
-  const hideHeaderRoutes = ["/auth"];
   const { isAuth } = useSelector(state => state.user);
+  const isPublicRoute = ["/", "/kenya", "/auth"].includes(location.pathname);
+  const showShell = isAuth && !isPublicRoute && location.pathname !== "/ops";
 
-  if(isLoading) return <FullScreenLoader />
+  if(isLoading && !isPublicRoute) return <FullScreenLoader />
 
   return (
     <>
-      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
+      {showShell && <Header />}
       <Routes>
         <Route
           path="/"
+          element={<PublicHome />}
+        />
+        <Route
+          path="/kenya"
+          element={<PublicHomeKenya />}
+        />
+        <Route path="/auth" element={isAuth ? <Navigate to="/ops" /> : <Auth />} />
+        <Route
+          path="/ops"
           element={
             <ProtectedRoutes>
               <Home />
             </ProtectedRoutes>
           }
         />
-        <Route path="/auth" element={isAuth ? <Navigate to="/" /> : <Auth />} />
         <Route
           path="/orders"
           element={
@@ -74,6 +84,7 @@ function Layout() {
         />
         <Route path="*" element={<div>Not Found</div>} />
       </Routes>
+      {showShell && <BottomNav />}
     </>
   );
 }

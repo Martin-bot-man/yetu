@@ -62,7 +62,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
           {/* Order Details */}
 
-          <div className="mt-4 border-t pt-4 text-sm text-gray-700">
+          <div className="mt-4 border-t pt-4 text-[15px] text-gray-700">
             <p>
               <strong>Order ID:</strong>{" "}
               {Math.floor(new Date(orderInfo.orderDate).getTime())}
@@ -81,12 +81,12 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
           {/* Items Summary */}
 
           <div className="mt-4 border-t pt-4">
-            <h3 className="text-sm font-semibold">Items Ordered</h3>
-            <ul className="text-sm text-gray-700">
+            <h3 className="text-[15px] font-semibold">Items Ordered</h3>
+            <ul className="text-[15px] text-gray-700">
               {orderInfo.items.map((item, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center text-xs"
+                  className="flex justify-between items-center text-sm"
                 >
                   <span>
                     {item.name} x{item.quantity}
@@ -99,7 +99,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
           {/* Bills Summary */}
 
-          <div className="mt-4 border-t pt-4 text-sm">
+          <div className="mt-4 border-t pt-4 text-[15px]">
             <p>
               <strong>Subtotal:</strong> Ksh{orderInfo.bills.total.toFixed(2)}
             </p>
@@ -114,7 +114,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
           {/* Payment Details */}
 
-          <div className="mb-2 mt-2 text-xs">
+          <div className="mb-2 mt-2 text-sm">
             {orderInfo.paymentMethod === "Cash" ? (
               <p>
                 <strong>Payment Method:</strong> {orderInfo.paymentMethod}
@@ -141,13 +141,13 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
         <div className="flex justify-between mt-4">
           <button
             onClick={handlePrint}
-            className="text-blue-500 hover:underline text-xs px-4 py-2 rounded-lg"
+            className="text-blue-500 hover:underline text-sm px-4 py-2 rounded-lg"
           >
             Print Receipt
           </button>
           <button
             onClick={() => setShowInvoice(false)}
-            className="text-red-500 hover:underline text-xs px-4 py-2 rounded-lg"
+            className="text-red-500 hover:underline text-sm px-4 py-2 rounded-lg"
           >
             Close
           </button>

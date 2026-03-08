@@ -1,61 +1,59 @@
 import React, { useEffect, useState } from "react";
-import restaurant from "../assets/images/restaurant-img.jpg"
-import logo from "../assets/images/logo.png"
+import restaurant from "../assets/images/restaurant-img.jpg";
+import logo from "../assets/images/logo.png";
 import Register from "../components/auth/Register";
 import Login from "../components/auth/Login";
 
 const Auth = () => {
-
   useEffect(() => {
-    document.title = "POS | Auth"
-  }, [])
+    document.title = "POS | Auth";
+  }, []);
 
   const [isRegister, setIsRegister] = useState(false);
 
   return (
-    <div className="flex min-h-screen w-full">
-      {/* Left Section */}
-      <div className="w-1/2 relative flex items-center justify-center bg-cover">
-        {/* BG Image */}
-        <img className="w-full h-full object-cover" src={restaurant} alt="Restaurant Image" />
-
-        {/* Black Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-80"></div>
-
-        {/* Quote at bottom */}
-        <blockquote className="absolute bottom-10 px-8 mb-10 text-2xl italic text-white">
-          "Serve customers the best food with prompt and friendly service in a
-          welcoming atmosphere, and they’ll keep coming back."
+    <div className="flex min-h-screen w-full bg-[#f3f4f6]">
+      <div className="relative hidden w-1/2 items-center justify-center bg-cover lg:flex">
+        <img className="h-full w-full object-cover" src={restaurant} alt="Restaurant" />
+        <div className="absolute inset-0 bg-slate-900/70" />
+        <blockquote className="absolute bottom-10 mb-10 px-8 text-2xl italic text-white">
+          "Busy service is good. Blind service is expensive. Keep orders moving and money visible."
           <br />
-          <span className="block mt-4 text-yellow-400">- Founder of Yetu</span>
+          <span className="mt-4 block text-slate-200">- Team Yetu</span>
         </blockquote>
       </div>
 
-      {/* Right Section */}
-      <div className="w-1/2 min-h-screen bg-[#1a1a1a] p-10">
-        <div className="flex flex-col items-center gap-2">
-          <img src={logo} alt="Restro Logo" className="h-14 w-14 border-2 rounded-full p-1" />
-          <h1 className="text-lg font-semibold text-[#f5f5f5] tracking-wide">Yetu</h1>
-        </div>
+      <div className="w-full min-h-screen bg-[#f3f4f6] p-8 lg:w-1/2 lg:p-10">
+        <div className="mx-auto max-w-xl rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="flex flex-col items-center gap-2">
+            <img src={logo} alt="Yetu Logo" className="h-14 w-14 rounded-full border border-slate-200 p-1" />
+            <h1 className="text-lg font-semibold tracking-wide text-slate-900">Yetu</h1>
+          </div>
 
-        <h2 className="text-4xl text-center mt-10 font-semibold text-yellow-400 mb-10">
-          {isRegister ? "Employee Registration" : "Employee Login"}
-        </h2>
-
-        {/* Components */}  
-        {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
-
-
-        <div className="flex justify-center mt-6">
-          <p className="text-sm text-[#ababab]">
-            {isRegister ? "Already have an account?" : "Don't have an account?"}
-            <a onClick={() => setIsRegister(!isRegister)} className="text-yellow-400 font-semibold hover:underline" href="#">
-              {isRegister ? "Sign in" : "Sign up"}
-            </a>
+          <h2 className="mb-4 mt-8 text-center text-4xl font-semibold text-slate-900">
+            {isRegister ? "Add Your Team Access" : "Run Your Shift"}
+          </h2>
+          <p className="mb-8 text-center text-slate-500">
+            {isRegister
+              ? "Create a staff login so the right person can do the right job."
+              : "Sign in and see tables, orders, and cash flow in one place."}
           </p>
+
+          {isRegister ? <Register setIsRegister={setIsRegister} /> : <Login />}
+
+          <div className="mt-6 flex justify-center">
+            <p className="text-[15px] text-slate-500">
+              {isRegister ? "Already have an account?" : "Don't have an account?"}
+              <button
+                onClick={() => setIsRegister(!isRegister)}
+                className="ml-1 font-semibold text-slate-900 underline-offset-2 hover:underline"
+                type="button"
+              >
+                {isRegister ? "Log in now" : "Create access"}
+              </button>
+            </p>
+          </div>
         </div>
-
-
       </div>
     </div>
   );

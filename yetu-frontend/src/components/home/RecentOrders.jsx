@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getOrders } from "../../https";
 import OrderList from "./OrderList";
+import { motion } from "framer-motion";
 
 const RecentOrders = () => {
   const navigate = useNavigate();
@@ -39,38 +40,48 @@ const RecentOrders = () => {
   }, [orders, search]);
 
   return (
-    <div className="px-8 mt-6">
-      <div className="bg-[#1a1a1a] w-full h-[450px] rounded-lg">
-        <div className="flex justify-between items-center px-6 py-4">
-          <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">Recent Orders</h1>
-          <button
-            type="button"
-            onClick={() => navigate("/orders")}
-            className="text-[#025cca] text-sm font-semibold"
-          >
-            View all
-          </button>
+    <div className="rounded-3xl border border-white/10 bg-[#111a2a]/85 p-4 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight text-[#f5f8ff]">Recent Orders</h1>
+          <p className="mt-1 text-[15px] text-[#9caed0]">Monitor live tickets and service progress.</p>
         </div>
+        <button
+          type="button"
+          onClick={() => navigate("/orders")}
+          className="rounded-lg border border-[#4ca8ff]/35 bg-[#102a44]/70 px-3 py-2 text-[15px] font-semibold text-[#8fd0ff] transition hover:bg-[#153555]"
+        >
+          View all
+        </button>
+      </div>
 
-        <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-6 py-4 mx-6">
-          <FaSearch className="text-[#f5f5f5]" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search recent orders"
-            className="bg-[#1f1f1f] outline-none text-[#f5f5f5] w-full"
-          />
-        </div>
+      <div className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-[#0e1420] px-4 py-3">
+        <FaSearch className="text-[#8aa3cf]" />
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by guest or table number"
+          className="w-full bg-transparent text-[15px] text-[#f5f8ff] outline-none placeholder:text-[#6d80a7]"
+        />
+      </div>
 
-        <div className="mt-4 px-6 overflow-scroll h-[300px] scrollbar-hide">
-          {isLoading && <p className="text-[#ababab]">Loading orders...</p>}
-          {!isLoading && !filteredOrders.length && (
-            <p className="text-[#ababab]">No recent orders found.</p>
-          )}
-          {!isLoading &&
-            filteredOrders.map((order) => <OrderList key={order._id} order={order} />)}
-        </div>
+      <div className="mt-4 h-[330px] space-y-2 overflow-y-auto pr-1 scrollbar-hide">
+        {isLoading && <p className="text-[#9caed0]">Loading latest orders...</p>}
+        {!isLoading && !filteredOrders.length && (
+          <p className="text-[#9caed0]">No recent orders yet. New tickets will appear here.</p>
+        )}
+        {!isLoading &&
+          filteredOrders.map((order, index) => (
+            <motion.div
+              key={order._id}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: index * 0.03 }}
+            >
+              <OrderList order={order} />
+            </motion.div>
+          ))}
       </div>
     </div>
   );

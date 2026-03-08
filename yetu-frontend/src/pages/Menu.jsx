@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import BottomNav from "../components/shared/BottomNav";
 import BackButton from "../components/shared/BackButton";
 import { MdRestaurantMenu } from "react-icons/md";
 import MenuContainer from "../components/menu/MenuContainer";
@@ -9,54 +8,45 @@ import Bill from "../components/menu/Bill";
 import { useSelector } from "react-redux";
 
 const Menu = () => {
-
-    useEffect(() => {
-      document.title = "POS | Menu"
-    }, [])
+  useEffect(() => {
+    document.title = "POS | Menu";
+  }, []);
 
   const customerData = useSelector((state) => state.customer);
 
   return (
-    <section className="bg-[#1f1f1f] h-[calc(100vh-5rem)] overflow-hidden flex gap-3">
-      {/* Left Div */}
-      <div className="flex-[3]">
-        <div className="flex items-center justify-between px-10 py-4">
-          <div className="flex items-center gap-4">
-            <BackButton />
-            <h1 className="text-[#f5f5f5] text-2xl font-bold tracking-wider">
-              Menu
-            </h1>
-          </div>
-          <div className="flex items-center justify-around gap-4">
-            <div className="flex items-center gap-3 cursor-pointer">
-              <MdRestaurantMenu className="text-[#f5f5f5] text-4xl" />
+    <section className="min-h-[calc(100vh-5rem)] bg-[#f3f4f6] pb-24">
+      <div className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 px-6 py-6 xl:grid-cols-4">
+        <div className="xl:col-span-3">
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-slate-200 bg-white px-5 py-4 shadow-sm">
+            <div className="flex items-center gap-4">
+              <BackButton />
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Menu</h1>
+            </div>
+            <div className="flex items-center gap-3">
+              <MdRestaurantMenu className="text-3xl text-slate-700" />
               <div className="flex flex-col items-start">
-                <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-                  {customerData.customerName || "Customer Name"}
+                <h1 className="text-[15px] font-semibold tracking-wide text-slate-900">
+                  {customerData.customerName || "Walk-in Guest"}
                 </h1>
-                <p className="text-xs text-[#ababab] font-medium">
-                  Table : {customerData.table?.tableNo || "N/A"}
-                </p>
+                <p className="text-sm text-slate-500">Table: {customerData.table?.tableNo || "N/A"}</p>
               </div>
             </div>
           </div>
+
+          <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+            <MenuContainer />
+          </div>
         </div>
 
-        <MenuContainer />
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm">
+          <CustomerInfo />
+          <hr className="border-slate-200" />
+          <CartInfo />
+          <hr className="border-slate-200" />
+          <Bill />
+        </div>
       </div>
-      {/* Right Div */}
-      <div className="flex-[1] bg-[#1a1a1a] mt-4 mr-3 h-[780px] rounded-lg pt-2">
-        {/* Customer Info */}
-        <CustomerInfo />
-        <hr className="border-[#2a2a2a] border-t-2" />
-        {/* Cart Items */}
-        <CartInfo />
-        <hr className="border-[#2a2a2a] border-t-2" />
-        {/* Bills */}
-        <Bill />
-      </div>
-
-      <BottomNav />
     </section>
   );
 };

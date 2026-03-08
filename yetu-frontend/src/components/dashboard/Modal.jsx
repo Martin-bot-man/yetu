@@ -3,104 +3,74 @@ import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { useMutation } from "@tanstack/react-query";
 import { addTable } from "../../https";
-import { enqueueSnackbar } from "notistack"
+import { enqueueSnackbar } from "notistack";
 
 const Modal = ({ setIsTableModalOpen }) => {
-  const [tableData, setTableData] = useState({
-    tableNo: "",
-    seats: "",
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setTableData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(tableData);
-    tableMutation.mutate(tableData);
-  };
-
-  const handleCloseModal = () => {
-    setIsTableModalOpen(false);
-  };
+  const [tableData, setTableData] = useState({ tableNo: "", seats: "" });
 
   const tableMutation = useMutation({
     mutationFn: (reqData) => addTable(reqData),
     onSuccess: (res) => {
-        setIsTableModalOpen(false);
-        const { data } = res;
-        enqueueSnackbar(data.message, { variant: "success" })
+      setIsTableModalOpen(false);
+      enqueueSnackbar(res.data.message, { variant: "success" });
     },
     onError: (error) => {
-        const { data } = error.response;
-        enqueueSnackbar(data.message, { variant: "error" })
-        console.log(error);
-    }
-  })
-
+      enqueueSnackbar(error.response?.data?.message || "Could not create table.", { variant: "error" });
+    },
+  });
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-[#262626] p-6 rounded-lg shadow-lg w-96"
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        className="w-96 rounded-lg border border-slate-200 bg-white p-6 shadow-xl"
       >
-        {/* Modal Header */}
-
-        <div className="flex justify-between item-center mb-4">
-          <h2 className="text-[#f5f5f5] text-xl font-semibold">Add Table</h2>
-          <button
-            onClick={handleCloseModal}
-            className="text-[#f5f5f5] hover:text-red-500"
-          >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-slate-900">Create New Table</h2>
+          <button onClick={() => setIsTableModalOpen(false)} className="text-slate-500 hover:text-slate-900">
             <IoMdClose size={24} />
           </button>
         </div>
 
-        {/* Modal Body */}
-
-        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            tableMutation.mutate(tableData);
+          }}
+          className="mt-6 space-y-4"
+        >
           <div>
-            <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-              Table Number
-            </label>
-            <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+            <label className="mb-2 mt-3 block text-[15px] font-medium text-slate-600">Table Number</label>
+            <div className="flex rounded-lg border border-slate-300 bg-white p-3 px-4">
               <input
                 type="number"
                 name="tableNo"
                 value={tableData.tableNo}
-                onChange={handleInputChange}
-                className="bg-transparent flex-1 text-white focus:outline-none"
+                onChange={(e) => setTableData((prev) => ({ ...prev, tableNo: e.target.value }))}
+                className="flex-1 bg-transparent text-slate-900 focus:outline-none"
                 required
               />
             </div>
           </div>
           <div>
-            <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-              Number of Seats
-            </label>
-            <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+            <label className="mb-2 mt-3 block text-[15px] font-medium text-slate-600">Number of Seats</label>
+            <div className="flex rounded-lg border border-slate-300 bg-white p-3 px-4">
               <input
                 type="number"
                 name="seats"
                 value={tableData.seats}
-                onChange={handleInputChange}
-                className="bg-transparent flex-1 text-white focus:outline-none"
+                onChange={(e) => setTableData((prev) => ({ ...prev, seats: e.target.value }))}
+                className="flex-1 bg-transparent text-slate-900 focus:outline-none"
                 required
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-lg mt-10 mb-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
-          >
-            Add Table
+          <button type="submit" className="mb-4 mt-8 w-full rounded-lg bg-slate-900 py-3 text-lg font-bold text-white">
+            Save Table Setup
           </button>
         </form>
       </motion.div>

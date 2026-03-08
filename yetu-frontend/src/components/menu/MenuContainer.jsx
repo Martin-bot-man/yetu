@@ -1,111 +1,113 @@
-import React, { useState } from "react";
-import { menus } from "../../constants";
+import React, { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { GrRadialSelected } from "react-icons/gr";
 import { FaShoppingCart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addItems } from "../../redux/slices/cartSlice";
+import { getInventoryItems } from "../../https/inventoryAPI";
 
+const categoryColors = ["#d0342c", "#0f4c81", "#2f6f4e", "#9a3412", "#1d4ed8", "#334155"];
 
 const MenuContainer = () => {
-  const [selected, setSelected] = useState(menus[0]);
-  const [itemCount, setItemCount] = useState(0);
-  const [itemId, setItemId] = useState();
   const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [quantities, setQuantities] = useState({});
 
-  const increment = (id) => {
-    setItemId(id);
-    if (itemCount >= 4) return;
-    setItemCount((prev) => prev + 1);
-  };
+  const { data: resData, isLoading } = useQuery({
+    queryKey: ["inventory-items-for-menu"],
+    queryFn: async () => getInventoryItems({ sortBy: "name", order: "asc" }),
+  });
 
-  const decrement = (id) => {
-    setItemId(id);
-    if (itemCount <= 0) return;
-    setItemCount((prev) => prev - 1);
-  };
+  const inventoryItems = resData?.data?.data || [];
+
+  const groupedMenus = useMemo(() => {
+    const groups = {};
+    inventoryItems.forEach((item) => {
+      const category = item?.category || "Uncategorized";
+      if (!groups[category]) groups[category] = [];
+      groups[category].push({
+        id: item._id,
+        name: item.name,
+        price: Number(item.sellingPrice || item.costPrice || 0),
+      });
+    });
+    return groups;
+  }, [inventoryItems]);
+
+  const categories = Object.keys(groupedMenus);
+  const activeCategory = selectedCategory || categories[0] || "";
+  const selectedItems = groupedMenus[activeCategory] || [];
+
+  const increment = (id) => setQuantities((prev) => ({ ...prev, [id]: Math.min((prev[id] || 0) + 1, 20) }));
+  const decrement = (id) => setQuantities((prev) => ({ ...prev, [id]: Math.max((prev[id] || 0) - 1, 0) }));
 
   const handleAddToCart = (item) => {
-    if(itemCount === 0) return;
+    const quantity = quantities[item.id] || 0;
+    if (!quantity) return;
 
-    const {name, price} = item;
-    const newObj = { id: new Date(), name, pricePerQuantity: price, quantity: itemCount, price: price * itemCount };
+    dispatch(
+      addItems({
+        id: `${item.id}-${Date.now()}`,
+        name: item.name,
+        pricePerQuantity: item.price,
+        quantity,
+        price: item.price * quantity,
+      })
+    );
 
-    dispatch(addItems(newObj));
-    setItemCount(0);
-  }
-
+    setQuantities((prev) => ({ ...prev, [item.id]: 0 }));
+  };
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-4 px-10 py-4 w-[100%]">
-        {menus.map((menu) => {
+      <div className="grid w-full grid-cols-2 gap-3 px-5 py-5 lg:grid-cols-4">
+        {categories.map((category, index) => {
+          const isSelected = activeCategory === category;
           return (
             <div
-              key={menu.id}
-              className="flex flex-col items-start justify-between p-4 rounded-lg h-[100px] cursor-pointer"
-              style={{ backgroundColor: menu.bgColor }}
-              onClick={() => {
-                setSelected(menu);
-                setItemId(0);
-                setItemCount(0);
-              }}
+              key={category}
+              className="flex h-[100px] cursor-pointer flex-col items-start justify-between rounded-lg p-4"
+              style={{ backgroundColor: categoryColors[index % categoryColors.length] }}
+              onClick={() => setSelectedCategory(category)}
             >
-              <div className="flex items-center justify-between w-full">
-                <h1 className="text-[#f5f5f5] text-lg font-semibold">
-                  {menu.icon} {menu.name}
-                </h1>
-                {selected.id === menu.id && (
-                  <GrRadialSelected className="text-white" size={20} />
-                )}
+              <div className="flex w-full items-center justify-between">
+                <h1 className="text-base font-semibold text-white">{category}</h1>
+                {isSelected && <GrRadialSelected className="text-white" size={20} />}
               </div>
-              <p className="text-[#ababab] text-sm font-semibold">
-                {menu.items.length} Items
-              </p>
+              <p className="text-[15px] font-semibold text-white/75">{groupedMenus[category]?.length || 0} Items</p>
             </div>
           );
         })}
       </div>
 
-      <hr className="border-[#2a2a2a] border-t-2 mt-4" />
+      <hr className="border-slate-200" />
 
-      <div className="grid grid-cols-4 gap-4 px-10 py-4 w-[100%]">
-        {selected?.items.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="flex flex-col items-start justify-between p-4 rounded-lg h-[150px] cursor-pointer hover:bg-[#2a2a2a] bg-[#1a1a1a]"
-            >
-              <div className="flex items-start justify-between w-full">
-                <h1 className="text-[#f5f5f5] text-lg font-semibold">
-                  {item.name}
-                </h1>
-                <button onClick={() => handleAddToCart(item)} className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"><FaShoppingCart size={20} /></button>
+      <div className="grid w-full grid-cols-1 gap-3 px-5 py-5 md:grid-cols-2 xl:grid-cols-3">
+        {isLoading && <p className="col-span-full text-slate-500">Loading menu...</p>}
+        {!isLoading && !selectedItems.length && (
+          <p className="col-span-full text-slate-500">No inventory items available. Add items in Inventory first.</p>
+        )}
+
+        {!isLoading &&
+          selectedItems.map((item) => (
+            <div key={item.id} className="flex h-[160px] flex-col justify-between rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between">
+                <h1 className="text-base font-semibold text-slate-900">{item.name}</h1>
+                <button onClick={() => handleAddToCart(item)} className="rounded-lg bg-emerald-50 p-2 text-emerald-700">
+                  <FaShoppingCart size={18} />
+                </button>
               </div>
-              <div className="flex items-center justify-between w-full">
-                <p className="text-[#f5f5f5] text-xl font-bold">
-                  ₹{item.price}
-                </p>
-                <div className="flex items-center justify-between bg-[#1f1f1f] px-4 py-3 rounded-lg gap-6 w-[50%]">
-                  <button
-                    onClick={() => decrement(item.id)}
-                    className="text-yellow-500 text-2xl"
-                  >
-                    &minus;
-                  </button>
-                  <span className="text-white">
-                    {itemId == item.id ? itemCount : "0"}
-                  </span>
-                  <button
-                    onClick={() => increment(item.id)}
-                    className="text-yellow-500 text-2xl"
-                  >
-                    &#43;
-                  </button>
+
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-lg font-bold text-slate-900">KES {item.price}</p>
+                <div className="flex w-[58%] items-center justify-between gap-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+                  <button onClick={() => decrement(item.id)} className="text-2xl text-slate-700">&minus;</button>
+                  <span className="font-semibold text-slate-900">{quantities[item.id] || 0}</span>
+                  <button onClick={() => increment(item.id)} className="text-2xl text-slate-700">&#43;</button>
                 </div>
               </div>
             </div>
-          );
-        })}
+          ))}
       </div>
     </>
   );

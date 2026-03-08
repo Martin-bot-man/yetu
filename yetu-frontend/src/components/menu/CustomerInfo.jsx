@@ -3,23 +3,19 @@ import { useSelector } from "react-redux";
 import { formatDate, getAvatarName } from "../../utils";
 
 const CustomerInfo = () => {
-  const [dateTime, setDateTime] = useState(new Date());
+  const [dateTime] = useState(new Date());
   const customerData = useSelector((state) => state.customer);
 
   return (
-    <div className="flex items-center justify-between px-4 py-3">
+    <div className="flex items-center justify-between px-4 py-4">
       <div className="flex flex-col items-start">
-        <h1 className="text-md text-[#f5f5f5] font-semibold tracking-wide">
-          {customerData.customerName || "Customer Name"}
+        <h1 className="text-[15px] font-semibold tracking-wide text-slate-900">
+          {customerData.customerName || "Walk-in Guest"}
         </h1>
-        <p className="text-xs text-[#ababab] font-medium mt-1">
-          #{customerData.orderId || "N/A"} / Dine in
-        </p>
-        <p className="text-xs text-[#ababab] font-medium mt-2">
-          {formatDate(dateTime)}
-        </p>
+        <p className="mt-1 text-sm font-medium text-slate-500">#{customerData.orderId || "N/A"} / Dine in</p>
+        <p className="mt-2 text-sm font-medium text-slate-500">{formatDate(dateTime)}</p>
       </div>
-      <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg">
+      <button className="rounded-lg bg-slate-100 px-3 py-2 text-lg font-bold text-slate-700">
         {getAvatarName(customerData.customerName) || "CN"}
       </button>
     </div>

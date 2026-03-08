@@ -10,52 +10,40 @@ const CartInfo = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(scrolLRef.current){
-      scrolLRef.current.scrollTo({
-        top: scrolLRef.current.scrollHeight,
-        behavior: "smooth"
-      })
+    if (scrolLRef.current) {
+      scrolLRef.current.scrollTo({ top: scrolLRef.current.scrollHeight, behavior: "smooth" });
     }
-  },[cartData]);
-
-  const handleRemove = (itemId) => {
-    dispatch(removeItem(itemId));
-  }
+  }, [cartData]);
 
   return (
-    <div className="px-4 py-2">
-      <h1 className="text-lg text-[#e4e4e4] font-semibold tracking-wide">
-        Order Details
-      </h1>
-      <div className="mt-4 overflow-y-scroll scrollbar-hide h-[380px]" ref={scrolLRef} >
+    <div className="px-4 py-3">
+      <h1 className="text-lg font-semibold tracking-wide text-slate-900">Order Details</h1>
+      <div className="mt-4 h-[380px] overflow-y-scroll" ref={scrolLRef}>
         {cartData.length === 0 ? (
-          <p className="text-[#ababab] text-sm flex justify-center items-center h-[380px]">Your cart is empty. Start adding items!</p>
-        ) : cartData.map((item) => {
-          return (
-            <div className="bg-[#1f1f1f] rounded-lg px-4 py-4 mb-2">
+          <p className="flex h-[380px] items-center justify-center text-[15px] text-slate-500">
+            No items yet. Add dishes to build this order.
+          </p>
+        ) : (
+          cartData.map((item) => (
+            <div key={item.id} className="mb-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
               <div className="flex items-center justify-between">
-                <h1 className="text-[#ababab] font-semibold tracling-wide text-md">
-                  {item.name}
-                </h1>
-                <p className="text-[#ababab] font-semibold">x{item.quantity}</p>
+                <h1 className="text-md font-semibold text-slate-700">{item.name}</h1>
+                <p className="font-semibold text-slate-500">x{item.quantity}</p>
               </div>
-              <div className="flex items-center justify-between mt-3">
+              <div className="mt-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RiDeleteBin2Fill
-                    onClick={() => handleRemove(item.id)}
-                    className="text-[#ababab] cursor-pointer"
+                    onClick={() => dispatch(removeItem(item.id))}
+                    className="cursor-pointer text-slate-500"
                     size={20}
                   />
-                  <FaNotesMedical
-                    className="text-[#ababab] cursor-pointer"
-                    size={20}
-                  />
+                  <FaNotesMedical className="cursor-pointer text-slate-500" size={18} />
                 </div>
-                <p className="text-[#f5f5f5] text-md font-bold">₹{item.price}</p>
+                <p className="text-md font-bold text-slate-900">KES {item.price}</p>
               </div>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
     </div>
   );
